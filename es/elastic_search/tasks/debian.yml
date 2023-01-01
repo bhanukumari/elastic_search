@@ -1,0 +1,12 @@
+---
+
+- name: ElasticSearch Install | Download elasticsearch {{ es_version }}
+  get_url:
+    url: "{{ es_download_url }}/elasticsearch-{{ es_version }}-linux-x86_64.tar.gz"
+    dest: "/tmp/elasticsearch.tar.gz"
+  register: download
+
+
+    # "{{ os_download_url }}/{{ os_version }}/opensearch-{{ os_version }}-linux-x64.tar.gz"
+
+    #    wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-8.5.3-linux-x86_64.tar.gz

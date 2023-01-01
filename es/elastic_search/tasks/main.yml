@@ -1,0 +1,27 @@
+---
+# tasks file for es
+- name: Install elasticsearch on debian
+  when: ansible_os_family == "Debian"
+  include_tasks: debian.yml
+
+- name: Install elasticsearch on redhat
+  when: ansible_os_family == "RedHat"
+  include_tasks: redhat.yml
+
+- name: Create opensearch user
+  user:
+    name: "{{ es_user }}"
+    state: present
+    shell: /bin/false
+    create_home: true
+    home: "{{ es_home }}"
+- name: Create home directory
+  file:
+    path: "{{ es_home }}"
+    state: directory
+    owner: "{{ es_user }}"
+    group: "{{ es_user }}"  
+
+- name: Extract the tar file
+  command: 
+    chdir=/tmp/ tar -xvzf elasticsearch.tar.gz

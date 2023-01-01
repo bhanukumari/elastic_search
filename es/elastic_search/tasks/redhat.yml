@@ -1,0 +1,8 @@
+---
+
+- name: ElasticSearch Install | Download elasticsearch {{ es_version }}
+  get_url:
+    url: "{{ es_download_url }}/elasticsearch-{{ es_version }}-linux-x86_64.tar.gz"
+    dest: "/tmp/elasticsearch.tar.gz"
+  register: download
+

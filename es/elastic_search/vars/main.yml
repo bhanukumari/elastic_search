@@ -1,0 +1,6 @@
+---
+# vars file for es
+es_version: 8.5.3
+es_download_url: https://artifacts.elastic.co/downloads/elasticsearch
+es_user: opensearch
+es_home: /usr/share/elasticsearch
