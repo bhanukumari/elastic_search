@@ -8,20 +8,64 @@
   when: ansible_os_family == "RedHat"
   include_tasks: redhat.yml
 
-- name: Create opensearch user
+- name: Create elasticsearch user
   user:
     name: "{{ es_user }}"
     state: present
     shell: /bin/false
     create_home: true
     home: "{{ es_home }}"
+
+- name: Create elasticsearch group
+  user:
+    name: "{{ es_group }}"
+    state: present
+    shell: /bin/false
+    create_home: true
+    home: "{{ es_group }}"
+
 - name: Create home directory
   file:
     path: "{{ es_home }}"
     state: directory
     owner: "{{ es_user }}"
-    group: "{{ es_user }}"  
+    group: "{{ es_group }}"  
 
 - name: Extract the tar file
-  command: 
-    chdir=/tmp/ tar -xvzf elasticsearch.tar.gz
+  command:  
+    chdir=/tmp/ tar -xvzf elasticsearch.tar.gz -C "{{ es_home }}" --strip-components=1
+    #    chdir=/tmp/ tar -xvzf opensearch.tar.gz -C "{{ os_home }}" --strip-components=1  
+
+- name: Set max map count to sysctl.conf
+  shell: 
+    cmd: echo vm.max_map_count=262144 >> /etc/sysctl.conf
+  notify: 
+    - reload systemd configuration
+    - restart kernel parameter
+
+- name: ElasticSearch Install | Copy jvm.options File for Instance
+  template:
+    src: jvm.options
+    dest: "{{es_conf_dir}}/jvm.options"
+    owner: "{{ es_user }}"
+    group: "{{ es_user }}"
+    mode: 0644
+    force: yes     
+
+- name: ElasticSearch Install | Copy Configuration File
+  template:
+    src: elasticsearch.yml
+    dest: "{{es_conf_dir}}/elasticsearch.yml"
+    owner: "{{ es_user }}"
+    group: "{{ es_user }}"
+    mode: 0644
+    backup: yes
+
+- name: OpenSearch Install | create systemd service
+  template:
+    src: elasticsearch.service
+    dest: "{{ systemctl_path }}/elasticsearch.service"    
+  notify: 
+    - reload systemd configuration
+    - restart elasticsearch
+

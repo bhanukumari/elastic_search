@@ -1,6 +1,11 @@
 ---
 # vars file for es
-es_version: 8.5.3
+es_version: 7.8.0
 es_download_url: https://artifacts.elastic.co/downloads/elasticsearch
-es_user: opensearch
+es_user: elasticsearch
+es_group: elasticsearch  
 es_home: /usr/share/elasticsearch
+es_conf_dir: /usr/share/elasticsearch/config
+xmx_value: 512
+xms_value: 512
+systemctl_path: /etc/systemd/system
