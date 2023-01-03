@@ -34,7 +34,6 @@
 - name: Extract the tar file
   command:  
     chdir=/tmp/ tar -xvzf elasticsearch.tar.gz -C "{{ es_home }}" --strip-components=1
-    #    chdir=/tmp/ tar -xvzf opensearch.tar.gz -C "{{ os_home }}" --strip-components=1  
 
 - name: Set max map count to sysctl.conf
   shell: 
